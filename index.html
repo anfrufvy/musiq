@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Practice - Music Entrance Community</title>
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+<!-- Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+  --bg:#07070a;
+  --card:rgba(255,255,255,0.08);
+  --line:rgba(255,255,255,0.1);
+  --text:#ffffff;
+  --sub:#b3b3b3;
+  --purple:#7c4dff;
+  --blue:#3b82f6;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Pretendard',sans-serif;
+}
+
+body{
+  background:var(--bg);
+  color:white;
+  overflow:hidden;
+}
+
+/* Background */
+.bg-blur{
+  position:fixed;
+  width:500px;
+  height:500px;
+  border-radius:50%;
+  filter:blur(120px);
+  z-index:-1;
+  opacity:0.5;
+  animation: float 12s infinite ease-in-out;
+}
+
+.bg1{
+  background:#6d28d9;
+  top:-150px;
+  left:-100px;
+}
+
+.bg2{
+  background:#2563eb;
+  bottom:-150px;
+  right:-100px;
+}
+
+@keyframes float{
+  0%{transform:translateY(0px);}
+  50%{transform:translateY(30px);}
+  100%{transform:translateY(0px);}
+}
+
+/* Glass */
+.glass{
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+/* Login */
+#loginPage{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.login-card{
+  width:100%;
+  max-width:420px;
+  padding:40px;
+  border-radius:30px;
+}
+
+.input{
+  width:100%;
+  padding:15px;
+  border-radius:15px;
+  border:none;
+  outline:none;
+  background:rgba(255,255,255,0.08);
+  color:white;
+  margin-top:12px;
+}
+
+.btn{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:15px;
+  cursor:pointer;
+  font-weight:700;
+  transition:0.3s;
+}
+
+.btn-main{
+  background:linear-gradient(90deg,var(--purple),var(--blue));
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+}
+
+/* App */
+#app{
+  display:none;
+  height:100vh;
+  overflow:hidden;
+}
+
+.topbar{
+  position:fixed;
+  top:0;
+  width:100%;
+  z-index:50;
+  padding:14px;
+}
+
+.feed{
+  height:100vh;
+  overflow-y:scroll;
+  scroll-snap-type:y mandatory;
+}
+
+.video-card{
+  height:100vh;
+  scroll-snap-align:start;
+  position:relative;
+  display:flex;
+  align-items:flex-end;
+  padding:20px;
+}
+
+.video-bg{
+  position:absolute;
+  inset:0;
+  background-size:cover;
+  background-position:center;
+  z-index:-2;
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to top,
+    rgba(0,0,0,0.9),
+    rgba(0,0,0,0.1)
+  );
+  z-index:-1;
+}
+
+.right-actions{
+  position:absolute;
+  right:15px;
+  bottom:120px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.action-btn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+  cursor:pointer;
+}
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  padding:10px 20px;
+  z-index:100;
+}
+
+.nav-inner{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-radius:25px;
+  padding:15px 20px;
+}
+
+.nav-btn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  font-size:12px;
+  color:#cfcfcf;
+  cursor:pointer;
+}
+
+.nav-btn.active{
+  color:white;
+}
+
+/* Category */
+.category-wrap{
+  position:fixed;
+  top:75px;
+  width:100%;
+  overflow-x:auto;
+  display:flex;
+  gap:10px;
+  padding:10px;
+  z-index:20;
+}
+
+.category{
+  min-width:max-content;
+  padding:10px 18px;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.category.active{
+  background:linear-gradient(90deg,var(--purple),var(--blue));
+}
+
+/* Panels */
+.side-panel{
+  position:fixed;
+  top:0;
+  right:-100%;
+  width:100%;
+  max-width:430px;
+  height:100vh;
+  background:#0c0c12;
+  z-index:200;
+  transition:0.4s;
+  overflow-y:auto;
+}
+
+.side-panel.active{
+  right:0;
+}
+
+.panel-header{
+  position:sticky;
+  top:0;
+  background:#0c0c12;
+  padding:20px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.comment-box{
+  background:rgba(255,255,255,0.05);
+  border-radius:18px;
+  padding:15px;
+  margin-top:15px;
+}
+
+/* Upload */
+.upload-box{
+  border:2px dashed rgba(255,255,255,0.2);
+  border-radius:20px;
+  padding:40px;
+  text-align:center;
+}
+
+/* Community */
+.community-card{
+  padding:20px;
+  border-radius:20px;
+  margin-bottom:15px;
+}
+
+/* Profile */
+.profile-banner{
+  height:180px;
+  background:linear-gradient(90deg,var(--purple),var(--blue));
+  border-radius:0 0 30px 30px;
+}
+
+/* Scroll */
+::-webkit-scrollbar{
+  display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg-blur bg1"></div>
+<div class="bg-blur bg2"></div>
+
+<!-- LOGIN -->
+<section id="loginPage">
+
+  <div class="login-card glass">
+
+    <div class="text-center mb-8">
+      <h1 class="text-5xl font-extrabold">Practice</h1>
+      <p class="text-gray-400 mt-3">
+        음악 입시생 전용 커뮤니티
+      </p>
+    </div>
+
+    <input class="input" placeholder="이메일">
+    <input class="input" type="password" placeholder="비밀번호">
+
+    <button class="btn btn-main mt-5" onclick="enterApp()">
+      로그인
+    </button>
+
+    <button class="btn glass mt-3">
+      <i class="fa-brands fa-google"></i>
+      Google로 계속하기
+    </button>
+
+    <div class="mt-8 text-sm text-center text-gray-500">
+      새벽 연습실 감성의 음악 SNS
+    </div>
+
+  </div>
+
+</section>
+
+<!-- APP -->
+<section id="app">
+  <div class="topbar">
+    <div class="glass rounded-3xl p-4 flex items-center justify-between">
+      <div class="font-bold text-2xl">Practice</div>
+      <div class="flex items-center gap-3">
+        <div class="nav-btn" onclick="openComments()">댓글</div>
+        <div class="nav-btn" onclick="openUpload()">업로드</div>
+        <div class="nav-btn" onclick="openCommunity()">커뮤니티</div>
+        <div class="nav-btn" onclick="openProfile()">마이</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="side-panel" id="commentsPanel"></div>
+<div class="side-panel" id="uploadPanel"></div>
+<div class="side-panel" id="communityPanel"></div>
+<div class="side-panel" id="profilePanel"></div>
+
+<script>
+const panels = ['commentsPanel', 'uploadPanel', 'communityPanel', 'profilePanel'];
+
+function enterApp(){
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('app').style.display='block';
+}
+
+function openComments(){
+  document.getElementById('commentsPanel').classList.add('active');
+}
+
+function closeComments(){
+  document.getElementById('commentsPanel').classList.remove('active');
+}
+
+function openUpload(){
+  document.getElementById('uploadPanel').classList.add('active');
+}
+
+function closeUpload(){
+  document.getElementById('uploadPanel').classList.remove('active');
+}
+
+function openCommunity(){
+  document.getElementById('communityPanel').classList.add('active');
+}
+
+function closeCommunity(){
+  document.getElementById('communityPanel').classList.remove('active');
+}
+
+function openProfile(){
+  document.getElementById('profilePanel').classList.add('active');
+}
+
+function closeProfile(){
+  document.getElementById('profilePanel').classList.remove('active');
+}
+
+document.addEventListener('click',(e)=>{
+  if (!e.target.id || !panels.includes(e.target.id)) return;
+  document.getElementById(e.target.id).classList.remove('active');
+});
+</script>
+
+</body>
+</html>
